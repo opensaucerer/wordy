@@ -1,0 +1,97 @@
+<html lang="en">
+  <%- include('../partials/head') %>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+      <symbol id="check" viewBox="0 0 16 16">
+        <title>Check</title>
+        <path
+          d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
+        />
+      </symbol>
+    </svg>
+
+    <div class="container py-3">
+      <%- include('../partials/header') %>
+
+      <main class="post">
+        <div class="container">
+          <form id="form" data-id="<%= post._id %>">
+            <div class="mb-3">
+              <label for="title" class="form-label">Title</label>
+              <input
+                type="text"
+                class="form-control"
+                required="true"
+                id="title"
+                name="title"
+                value="<%= post.title %>"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="snippet" class="form-label">Snippet</label>
+              <input
+                type="text"
+                class="form-control"
+                required="true"
+                id="snippet"
+                name="snippet"
+                value="<%= post.snippet %>"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="content" class="form-label">Content</label>
+              <textarea
+                name="content"
+                class="form-control"
+                required="true"
+                id="content"
+                rows="3"
+              >
+<%= post.content %> </textarea
+              >
+            </div>
+            <button class="btn btn-lg btn-primary" type="submit">Update</button>
+          </form>
+        </div>
+      </main>
+
+      <%- include('../partials/footer') %>
+    </div>
+
+    <script>
+      const form = document.querySelector('#form');
+      const postId = form.dataset.id;
+
+      form.onsubmit = async function (event) {
+        event.preventDefault();
+
+        //getting the post data
+        const title = document.querySelector('#title').value;
+        const snippet = document.querySelector('#snippet').value;
+        const content = document.querySelector('#content').value;
+
+        const postData = {
+          title: title,
+          snippet: snippet,
+          content: content,
+        };
+
+        const request = await fetch(`/posts/update_post/${postId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(postData),
+        });
+
+        const response = await request.json();
+
+        if (response.status === true) {
+          window.location.href = response.redirect;
+        } else {
+          alert(response.error);
+        }
+      };
+    </script>
+  </body>
+</html>
