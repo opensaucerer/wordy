@@ -19,8 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // connecting to the database
-dbURI =
-  'mongodb+srv://TestUser:testtest@samperfect.fn35f.mongodb.net/wordy?retryWrites=true&w=majority';
+dbURI = process.env.MONGO_URI;
   
 mongoose
   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
